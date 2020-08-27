@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:dcso="https://w3id.org/dcso/ns/core#"
+   xmlns:dct="http://purl.org/dc/terms/"
+   xmlns:foaf="http://xmlns.com/foaf/0.1/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:nodeID="ub2bL15C5">
+    <dcso:identifier_type>url</dcso:identifier_type>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#DMPId"/>
+    <dct:identifier>https://biodata-pt.ds-wizard.org/questionnaires/d70ecb1f-a1d8-4296-8a0c-775974fec333</dct:identifier>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL42C9">
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#ContributorId"/>
+    <dct:identifier>11111</dct:identifier>
+    <dcso:identifier_type>orcid</dcso:identifier_type>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL30C5">
+    <dcso:hasContributorId rdf:nodeID="ub2bL32C9"/>
+    <dcso:role>contact person</dcso:role>
+    <foaf:name>António Terra</foaf:name>
+    <foaf:mbox>antonio.terra@tecnico.ulisboa.pt</foaf:mbox>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#Contributor"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL50C5">
+    <foaf:name>José Borbinha</foaf:name>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#Contributor"/>
+    <foaf:mbox>jlb@tecnico.ulisboa.pt</foaf:mbox>
+    <dcso:hasContributorId rdf:nodeID="ub2bL52C9"/>
+    <dcso:role>supervisor</dcso:role>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL40C5">
+    <dcso:role>supervisor</dcso:role>
+    <foaf:name>João Cardoso</foaf:name>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#Contributor"/>
+    <dcso:hasContributorId rdf:nodeID="ub2bL42C9"/>
+    <foaf:mbox>joao.cardoso.geral@gmail.com</foaf:mbox>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://biodata-pt.ds-wizard.org/questionnaires/d70ecb1f-a1d8-4296-8a0c-775974fec333">
+    <dcso:ethicalIssuesExist>unknown</dcso:ethicalIssuesExist>
+    <dcso:hasProject rdf:nodeID="ub2bL61C5"/>
+    <dct:title>DMPThesesAnt</dct:title>
+    <dcso:hasContributor rdf:nodeID="ub2bL30C5"/>
+    <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-07-28T13:17:46+00:00</dct:created>
+    <dcso:hasContact rdf:nodeID="ub2bL20C5"/>
+    <dcso:hasContributor rdf:nodeID="ub2bL40C5"/>
+    <dcso:hasContributor rdf:nodeID="ub2bL50C5"/>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-07-28T13:17:46+00:00</dct:modified>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#DMP"/>
+    <dcso:hasDMPId rdf:nodeID="ub2bL15C5"/>
+    <dct:description>This maDMP has been created using Data Stewardship Wizard (DSW, ds-wizard.org) and is based on knowledge model Common DSW Knowledge Model (dsw:root:2.2.0). The questionnaire used for this DMP is identified by UUID "d70ecb1f-a1d8-4296-8a0c-775974fec333" within https://biodata-pt.ds-wizard.org DSW instance.</dct:description>
+    <dct:language rdf:resource="https://w3id.org/dcso/id/iso639-3/eng"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL32C9">
+    <dcso:identifier_type>orcid</dcso:identifier_type>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#ContributorId"/>
+    <dct:identifier>00000</dct:identifier>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL22C9">
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#ContactId"/>
+    <dcso:identifier_type>orcid</dcso:identifier_type>
+    <dct:identifier>00000</dct:identifier>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL52C9">
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#ContributorId"/>
+    <dct:identifier>22222</dct:identifier>
+    <dcso:identifier_type>orcid</dcso:identifier_type>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL61C5">
+    <dct:description>The objective of this project is to tackle the challenge posed by the multitude of DMP templates created by funding agencies and research institutes.</dct:description>
+    <dcso:end rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-01-29</dcso:end>
+    <dcso:start rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-09-18</dcso:start>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#Project"/>
+    <dct:title>Project – Development of tools for Data Management</dct:title>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="ub2bL20C5">
+    <foaf:mbox>antonio.terra@tecnico.ulisboa.pt</foaf:mbox>
+    <dcso:hasContactId rdf:nodeID="ub2bL22C9"/>
+    <foaf:name>António Terra</foaf:name>
+    <rdf:type rdf:resource="https://w3id.org/dcso/ns/core#Contact"/>
+  </rdf:Description>
+</rdf:RDF>

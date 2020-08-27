@@ -1,15 +1,19 @@
 package DSWexport;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
+import java.util.Date;
+
+import java.io.File;
+
+import java.lang.Thread;
+
+import DSWComm.DSWComm;
+import FusekiComm.FusekiComm;
 
 public final class App {
     private App() {
@@ -17,9 +21,7 @@ public final class App {
 
     
     /**TODO
-     * Get Document in RDF or Turtle
      * Send a Document to Fuseki
-     * Only download new/modified Documents
      * Polling system
      */
 
@@ -29,61 +31,51 @@ public final class App {
      * 
      * @param args The arguments of the program.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         String BioDataAPI = "https://api.biodata-pt.ds-wizard.org";
         String BioDataAuth = "{\n\t\"email\": \"antonio.terra@tecnico.ulisboa.pt\",\n\t\"password\": \"aterra\"\n}";
+        String fusekiServer = "http://localhost:3030/";
 
-        try {
-            JSONObject token = POSTRequest(BioDataAPI + "/tokens", BioDataAuth);
+        // Save what Documents was been uploaded
+        List<String> documentsUploaded = new ArrayList<>();
 
-            Map<String, Object> getParams = new HashMap<>();
-            JSONObject questionnaires = GETRequest(BioDataAPI + "/questionnaires", token.get("token").toString(), getParams);
-            System.out.println(questionnaires);
+        while (true) {
+            try {
+                JSONObject token = HTTPRequests.POSTRequest(BioDataAPI + "/tokens", BioDataAuth);
+    
+                List<String> questionnaires = DSWComm.GETQuestionnairesUUID(BioDataAPI, token.get("token").toString());
+                //System.out.println(questionnaires);
+    
+                List<Map<String, Date>> DocsUUIDs = new ArrayList<>(); 
+                File file;
+                String fileName;
+    
+                for (String quest : questionnaires) {
+                    Map<String, Date> docUUID = DSWComm.GETDocumentsUUID(BioDataAPI, token.get("token").toString(), quest);
+                    if(!docUUID.isEmpty()) {
+                        DocsUUIDs.add(docUUID);
+                        for (String doc: docUUID.keySet()) {
+                            if (!documentsUploaded.contains(doc)) {
+                                fileName = DSWComm.GETDocumentDownload(BioDataAPI, token.get("token").toString(), doc);
+                            
+                                file = new File("./DSWexport/Documents/" + fileName);
+                                FusekiComm.createDataset(fusekiServer + "$/datasets", doc);
+                                FusekiComm.uploadModel(file, "http://localhost:3030/" + doc);
+                                documentsUploaded.add(doc);
+                            }
+                        }
+                    }
+                }
+    
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            //Pause for 10 min
+            Thread.sleep(600000);
         }
-    }
-
-    /**
-     * Execute a HTTP GET Request
-     * @param URL url where to send the Request
-     * @param Auth bearer Token
-     * @param params Map<String, Object> with the query parameters
-     * @return JSONObject with the response Body
-     * @throws IOException
-     * @throws ParseException
-     */
-    public static JSONObject GETRequest(String URL, String Auth, Map<String, Object> params) throws IOException, ParseException {
-        HttpResponse<String> response = Unirest.get(URL)
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + Auth)
-                .queryString(params)
-                .asString();
-
-        JSONParser parser = new JSONParser();
-        JSONObject res = (JSONObject) parser.parse(response.getBody().toString());
-        return res;
-    }
-
-    /**
-     * Execute a HTTP POST Request
-     * @param URL url where to send the Request
-     * @param POST_PARAMS body of the Request
-     * @return JSONObject with the response Body
-     * @throws IOException
-     * @throws ParseException
-     */
-    public static JSONObject POSTRequest(String URL, String POST_PARAMS) throws IOException, ParseException {
-        HttpResponse<String> response = Unirest.post(URL)
-            .header("Content-Type", "application/json")
-            .body(POST_PARAMS)
-            .asString();
-
-        JSONParser parser = new JSONParser();
-        JSONObject res = (JSONObject) parser.parse(response.getBody().toString());
-        return res;
         
     }
 }

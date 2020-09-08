@@ -19,12 +19,6 @@ public final class App {
     private App() {
     }
 
-    
-    /**TODO
-     * Send a Document to Fuseki
-     * Polling system
-     */
-
 
     /**
      * 
@@ -59,7 +53,7 @@ public final class App {
                             if (!documentsUploaded.contains(doc)) {
                                 fileName = DSWComm.GETDocumentDownload(BioDataAPI, token.get("token").toString(), doc);
                             
-                                file = new File("./DSWexport/Documents/" + fileName);
+                                file = new File("./Documents/" + fileName);
                                 FusekiComm.createDataset(fusekiServer + "$/datasets", doc);
                                 FusekiComm.uploadModel(file, "http://localhost:3030/" + doc);
                                 documentsUploaded.add(doc);

@@ -45,13 +45,13 @@ public class DSWComm {
 
         if (isTurtle) {
             fileName = docUUID + ".ttl";
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./DSWexport/documents/" + fileName));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Documents/" + fileName));
             writer.write(response.getBody());
             writer.close();
         }
         else if (isRDF) {
             fileName = docUUID + ".rdf";
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./DSWexport/documents/" + fileName));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Documents/" + fileName));
             writer.write(response.getBody());
             writer.close();
         }

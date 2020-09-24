@@ -121,4 +121,20 @@ public class DSWComm {
 
         return questionnaireUUID;
     }
+
+    /**
+     * Returns the name of the Questionnaire
+     * @param BioDataAPI URL of BioData.pt
+     * @param Auth bearer Token
+     * @param UUID Questionnaire UUID
+     * @return String with Questionnaire Name
+     * @throws IOException
+     * @throws ParseException
+     */
+    public static String GETQuestionnaireName(String BioDataAPI, String Auth, String UUID) throws IOException, ParseException {
+        JSONObject questionnaire = HTTPRequests.GETRequest(BioDataAPI + "/questionnaires/" + UUID, Auth, null);
+        String name = questionnaire.get("name").toString();
+
+        return name;
+    }
 }

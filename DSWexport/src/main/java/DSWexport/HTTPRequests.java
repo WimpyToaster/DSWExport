@@ -46,6 +46,37 @@ public class HTTPRequests {
         return res;
     }
 
+     /**
+     * Execute a HTTP GET Request and returns the Status Code
+     * @param URL url where to send the Request
+     * @param Auth bearer Token
+     * @param params Map<String, Object> with the query parameters
+     * @return Returns the Status Code
+     * @throws IOException
+     * @throws ParseException
+     */
+    public static Integer GETRequestStatus(String URL, String Auth, Map<String, Object> params) throws IOException {
+        HttpResponse<String> response;
+        
+        if (Auth != null) {
+            response = Unirest.get(URL)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + Auth)
+                .queryString(params)
+                .asString();
+        }
+        else {
+            response = Unirest.get(URL)
+                .header("Content-Type", "application/json")
+                .queryString(params)
+                .asString();
+        }
+        
+        Integer res = response.getStatus();
+        return res;
+    }
+
+
     /**
      * Execute a HTTP POST Request
      * @param URL url where to send the Request

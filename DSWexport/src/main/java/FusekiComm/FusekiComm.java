@@ -15,6 +15,34 @@ import DSWexport.HTTPRequests;
 public class FusekiComm {
 	
 	/**
+	 * Verfies if a given Dataset already exists
+	 * @param serviceURI Fuseki Server Datasets URL
+	 * @param DatasetName New Dataset Name
+	 * @return True if exists, False if does not
+	 */
+	public static Boolean datasetExists(String serviceURI) throws IOException {
+
+		Integer statusCode = HTTPRequests.GETRequestStatus(serviceURI, null, null);
+
+		if (statusCode == 200) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Deletes the data associated with a given Dataset
+	 * @param serviceURI Fuseki Server Datasets URL
+	 * @param DatasetName Dataset Name
+	 */
+	public static void deleteDataFromDataset(String serviceURI, String DatasetName) throws IOException {
+		
+	}
+
+
+
+	/**
 	 * Creates a new empty Dataset in Fuseki Server
 	 * @param serviceURI Fuseki Server Datasets URL
 	 * @param DatasetName New Dataset Name

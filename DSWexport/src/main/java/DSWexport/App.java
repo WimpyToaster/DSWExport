@@ -3,6 +3,7 @@ package DSWexport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.json.simple.JSONObject;
 
@@ -19,6 +20,8 @@ public final class App {
     private App() {
     }
 
+    // Save the most recent document date uploaded for each questionnaire
+    static Map<String, Date> DocsLastDate = new HashMap<>();
 
     /**
      * 
@@ -34,31 +37,36 @@ public final class App {
         // Save what Documents was been uploaded
         List<String> documentsUploaded = new ArrayList<>();
 
+        
+
         while (true) {
             try {
                 JSONObject token = HTTPRequests.POSTRequest(BioDataAPI + "/tokens", BioDataAuth);
+                String authToken = token.get("token").toString();
     
-                List<String> questionnaires = DSWComm.GETQuestionnairesUUID(BioDataAPI, token.get("token").toString());
+                List<String> questionnaires = DSWComm.GETQuestionnairesUUID(BioDataAPI, authToken);
                 //System.out.println(questionnaires);
-    
-                List<Map<String, Date>> DocsUUIDs = new ArrayList<>(); 
-                File file;
-                String fileName;
+                
+
+                
+                String questionnaireName;
     
                 for (String quest : questionnaires) {
-                    Map<String, Date> docUUID = DSWComm.GETDocumentsUUID(BioDataAPI, token.get("token").toString(), quest);
+
+                    questionnaireName = DSWComm.GETQuestionnaireName(BioDataAPI, authToken, quest);
+                    Map<String, Date> docUUID = DSWComm.GETDocumentsUUID(BioDataAPI, authToken, quest);
+
                     if(!docUUID.isEmpty()) {
-                        DocsUUIDs.add(docUUID);
-                        for (String doc: docUUID.keySet()) {
-                            if (!documentsUploaded.contains(doc)) {
-                                fileName = DSWComm.GETDocumentDownload(BioDataAPI, token.get("token").toString(), doc);
-                            
-                                file = new File("./Documents/" + fileName);
-                                FusekiComm.createDataset(fusekiServer + "$/datasets", doc);
-                                FusekiComm.uploadModel(file, "http://localhost:3030/" + doc);
-                                documentsUploaded.add(doc);
-                            }
+
+                        String recentDoc = mostRecentDoc(docUUID);
+                        if (DocsLastDate.containsKey(quest)) {
+                            if ( DocsLastDate.get(quest).compareTo(docUUID.get(recentDoc)) < 0 ) { 
+                                createAndUpdateFuseki(BioDataAPI, fusekiServer, authToken, recentDoc, questionnaireName, quest, docUUID.get(recentDoc));
+                            }       
                         }
+                        else {
+                            createAndUpdateFuseki(BioDataAPI, fusekiServer, authToken, recentDoc, questionnaireName, quest, docUUID.get(recentDoc));
+                        }               
                     }
                 }
     
@@ -69,6 +77,56 @@ public final class App {
 
             //Pause for 10 min
             Thread.sleep(600000);
+        }  
+        
+    }
+
+
+    /**
+     * Returns the most recent DocUUID
+     * @param docs Map<String, Date> with the DocUUID and is Date of creation
+     * @return The most recent DocUUID
+     */
+    public static String mostRecentDoc(Map<String, Date> docs) {
+        String mostRecent = null;
+        
+        for (String doc: docs.keySet()) {
+            if (mostRecent == null) {
+                mostRecent = doc;
+            }
+            else {
+                if( docs.get(mostRecent).compareTo(docs.get(doc)) < 0 ) {
+                    mostRecent = doc;
+                }
+            }
+        }
+
+        return mostRecent;
+    }
+
+    /**
+     * Verifies if is need to create a new dataset and Update it
+     * @param BioDataAPI URL of BioData.pt
+     * @param fusekiServer Fuseki Server URL
+     * @param authToken bearer Token
+     * @param recentDoc The most recent DocUUID
+     * @param questionnaireName Questionnaire Name
+     * @param QuestionnairUUID Questionnaire UUID
+     * @param docDate The most recent Doc Date
+     */
+    public static void createAndUpdateFuseki(String BioDataAPI, String fusekiServer, String authToken, String recentDoc, String questionnaireName, String QuestionnairUUID,Date docDate) {
+        try {
+            String fileName = DSWComm.GETDocumentDownload(BioDataAPI, authToken, recentDoc);             
+            File file = new File("./Documents/" + fileName);
+
+            if (!FusekiComm.datasetExists(fusekiServer + "$/datasets" + questionnaireName)) {
+                FusekiComm.createDataset(fusekiServer + "$/datasets", questionnaireName);
+            }
+
+            FusekiComm.uploadModel(file, "http://localhost:3030/" + questionnaireName);
+            DocsLastDate.put(QuestionnairUUID, docDate);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
     }

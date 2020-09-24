@@ -31,16 +31,6 @@ public class FusekiComm {
 		return false;
 	}
 
-	/**
-	 * Deletes the data associated with a given Dataset
-	 * @param serviceURI Fuseki Server Datasets URL
-	 * @param DatasetName Dataset Name
-	 */
-	public static void deleteDataFromDataset(String serviceURI, String DatasetName) throws IOException {
-		
-	}
-
-
 
 	/**
 	 * Creates a new empty Dataset in Fuseki Server

@@ -37,12 +37,19 @@ public final class App {
         // Save what Documents was been uploaded
         List<String> documentsUploaded = new ArrayList<>();
 
+        String authToken = null;
+
+        try {
+            JSONObject token = HTTPRequests.POSTRequest(BioDataAPI + "/tokens", BioDataAuth);
+            authToken = token.get("token").toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
 
         while (true) {
             try {
-                JSONObject token = HTTPRequests.POSTRequest(BioDataAPI + "/tokens", BioDataAuth);
-                String authToken = token.get("token").toString();
+                
     
                 List<String> questionnaires = DSWComm.GETQuestionnairesUUID(BioDataAPI, authToken);
                 //System.out.println(questionnaires);

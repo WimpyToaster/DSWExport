@@ -57,6 +57,7 @@ public class DSWComm {
         }
         else{
             System.out.println("Document must be RDF or Turtle");
+            return null;
         }
 
         return fileName;

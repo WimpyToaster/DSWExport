@@ -32,7 +32,7 @@ public final class App {
 
         String BioDataAPI = "https://api.biodata-pt.ds-wizard.org";
         String BioDataAuth = "{\n\t\"email\": \"antonio.terra@tecnico.ulisboa.pt\",\n\t\"password\": \"aterra\"\n}";
-        String fusekiServer = "http://localhost:3030/";
+        String fusekiServer = "http://192.92.147.18:3030/";
 
         // Save what Documents was been uploaded
         List<String> documentsUploaded = new ArrayList<>();
@@ -60,7 +60,8 @@ public final class App {
     
                 for (String quest : questionnaires) {
 
-                    questionnaireName = DSWComm.GETQuestionnaireName(BioDataAPI, authToken, quest);
+                    questionnaireName = DSWComm.GETQuestionnaireName(BioDataAPI, authToken, quest).replaceAll("\\s+","");
+                    System.out.println(questionnaireName);
                     Map<String, Date> docUUID = DSWComm.GETDocumentsUUID(BioDataAPI, authToken, quest);
 
                     if(!docUUID.isEmpty()) {
@@ -123,15 +124,20 @@ public final class App {
      */
     public static void createAndUpdateFuseki(String BioDataAPI, String fusekiServer, String authToken, String recentDoc, String questionnaireName, String QuestionnairUUID,Date docDate) {
         try {
-            String fileName = DSWComm.GETDocumentDownload(BioDataAPI, authToken, recentDoc);             
-            File file = new File("./Documents/" + fileName);
+            String fileName = DSWComm.GETDocumentDownload(BioDataAPI, authToken, recentDoc);
+            if (fileName != null) {
+                File file = new File("./Documents/" + fileName);
 
-            if (!FusekiComm.datasetExists(fusekiServer + "$/datasets" + questionnaireName)) {
-                FusekiComm.createDataset(fusekiServer + "$/datasets", questionnaireName);
-            }
+                if (!FusekiComm.datasetExists(fusekiServer + "$/datasets" + questionnaireName)) {
+                    FusekiComm.createDataset(fusekiServer + "$/datasets", questionnaireName);
+                }
 
-            FusekiComm.uploadModel(file, "http://localhost:3030/" + questionnaireName);
-            DocsLastDate.put(QuestionnairUUID, docDate);
+                FusekiComm.uploadModel(file, fusekiServer + questionnaireName);
+                DocsLastDate.put(QuestionnairUUID, docDate);
+
+                System.out.println(questionnaireName + " uploaded");
+            }             
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -98,8 +98,12 @@ public class HTTPRequests {
             .asString();
         }
         
+        JSONObject res = null;
         JSONParser parser = new JSONParser();
-        JSONObject res = (JSONObject) parser.parse(response.getBody().toString());
+
+
+        res = (JSONObject) parser.parse(response.getBody().toString());
+        
         return res;
         
     }
